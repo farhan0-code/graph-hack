@@ -16,6 +16,7 @@ CANON — Final Competition PRD.md
 research/conflict_docs/
 data/
 falkordb-data/
+.falkordb/
 *.parquet
 *.sqlite
 *.sqlite-journal
@@ -30,6 +31,5 @@ node_modules/
 .next/
 .env
 .env.*
-!.env.example
 eval/results/partial.json
 video/

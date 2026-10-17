@@ -62,9 +62,19 @@ Four numbers, all reproducible from this repository:
 | **20/20** | unanswerable questions answered `UNKNOWN`; historical questions recover the retired evidence 20/20 |
 
 ```bash
-make falkordb-up && uv sync
-make verify        # 7 live checks incl. a FalkorDB restart mid-suite — all PASS
-make api && pnpm --dir apps/web dev
+# 1. Clone & enter the repository
+git clone https://github.com/farhan0-code/graph-hack.git
+cd graph-hack
+
+# 2. Start FalkorDB and install dependencies
+make falkordb-up && uv sync && pnpm --dir apps/web install
+
+# 3. Verify graph operations (7 live checks incl. FalkorDB restart mid-suite)
+make verify        # All 7 checks PASS
+
+# 4. Launch console
+make api           # Terminal 1: FastAPI backend on http://localhost:8000
+pnpm --dir apps/web dev  # Terminal 2: Next.js frontend on http://localhost:3000
 open http://localhost:3000/cut    # the Temporal Cut, on one real conflict, live
 ```
 
@@ -564,20 +574,34 @@ research/       conflict_inventory.json — the human-inspected 20 conflict pair
 **Prerequisites:** Docker, `uv`, Node 20+, `pnpm`.
 
 ```bash
-make falkordb-up      # MinIO + FalkorDB: :8443 HTTP, :7687 Bolt, :9090 metrics
-uv sync
-make verify        # 7 live checks, incl. a database restart mid-suite
-make index         # SQLite FTS5 over the benchmark parquet (~3 min, ~4 GB)
-make seed          # extract the 20 conflict claims + residue scan into FalkorDB
-make entities      # resolve people and aliases from the corpus into FalkorDB
-make graph-stats   # record real node/edge counts into evidence/
-make benchmark     # three-arm run → eval/results/latest.json
-make judge         # grade saved answers against the dataset rubric
-make envelope      # deterministic sweep over all 500 questions → evidence/safety_envelope.json
-make mechanism     # cut-only vs pin-only decomposition → evidence/mechanism.json
-make manifest      # fingerprint every artifact a claim rests on → evidence/run_manifest.json
-make api           # FastAPI on :8000
-pnpm --dir apps/web dev   # console on :3000 — landing at /, Temporal Cut at /cut
+# Step 1: Clone the repository
+git clone https://github.com/farhan0-code/graph-hack.git
+cd graph-hack
+
+# Step 2: Start FalkorDB in Docker (Port :6379)
+make falkordb-up           # Or: docker compose up -d
+
+# Step 3: Install all dependencies
+uv sync                    # Installs Python packages & dependencies
+pnpm --dir apps/web install # Installs Next.js frontend dependencies
+
+# Step 4: Run the verification suite
+make verify                # 7 live checks, incl. a database restart mid-suite (All PASS)
+
+# Step 5: (Optional) Corpus ingestion & seeding from public benchmark
+make index                 # SQLite FTS5 over benchmark dataset (~3 min, ~4 GB)
+make seed                  # extract 20 conflict claims + residue scan into FalkorDB
+make entities              # resolve people and aliases from the corpus into FalkorDB
+make graph-stats           # record real node/edge counts into evidence/
+
+# Step 6: (Optional) Benchmark reproduction
+make benchmark             # three-arm run → eval/results/latest.json
+make judge                 # grade saved answers against the dataset rubric
+make envelope              # deterministic sweep over all 500 questions
+
+# Step 7: Launch the interactive Web Console
+make api                   # Terminal 1: FastAPI on http://localhost:8000
+pnpm --dir apps/web dev    # Terminal 2: Web console on http://localhost:3000
 ```
 
 `make verify` prints:

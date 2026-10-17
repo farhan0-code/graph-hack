@@ -30,7 +30,7 @@ jobs:
         run: |
           mkdir -p falkordb-data/cache falkordb-data/minio
           printf '%s\n' 'local-development-token-32-bytes' > falkordb-data/auth-token
-          UID=$(id -u) GID=$(id -g) docker compose up -d
+          env UID="$(id -u)" GID="$(id -g)" docker compose up -d
           uv run python scripts/verify/wait_for_falkordb.py
       - name: Graph integration tests
         run: uv run pytest -m falkordb

@@ -15,7 +15,7 @@ class BenchQuestion:
 
 def load_questions(path: Path) -> dict[str, BenchQuestion]:
     questions: dict[str, BenchQuestion] = {}
-    for line in path.read_text().splitlines():
+    for line in path.read_text(encoding="utf-8").splitlines():
         if not line.strip():
             continue
         row = json.loads(line)
@@ -31,5 +31,5 @@ def load_questions(path: Path) -> dict[str, BenchQuestion]:
 
 
 def load_question_ids(path: Path) -> dict[str, tuple[str, ...]]:
-    raw = json.loads(path.read_text())
+    raw = json.loads(path.read_text(encoding="utf-8"))
     return {category: tuple(ids) for category, ids in raw.items()}

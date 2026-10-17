@@ -1,6 +1,7 @@
 import pytest
 
 from canon_graph.canonize import canonize
+from canon_graph.falkordb import FalkorClient
 from canon_graph.grounding import (
     DocDisposition,
     GroundingMode,
@@ -8,21 +9,20 @@ from canon_graph.grounding import (
     ground,
     match_claim_keys,
 )
-from canon_graph.hydra import FalkorClient
 from canon_graph.ingest import GraphWriter
 from canon_graph.resolve import GraphReader
 from canon_graph.schema import TruthState
 from canon_graph.verify import PRICE_KEY, contested_bundle, majority_bundle
 
-pytestmark = pytest.mark.hydra
+pytestmark = pytest.mark.falkordb
 
 
 def test_grounding_drops_superseded_docs_and_resolves_claim_key(
-    hydra: FalkorClient, verify_writer: GraphWriter
+    falkordb: FalkorClient, verify_writer: GraphWriter
 ) -> None:
     bundle = majority_bundle()
     verify_writer.write_claim(bundle, canonize(bundle), {})
-    reader = GraphReader(hydra)
+    reader = GraphReader(falkordb)
     keys = reader.all_claim_keys("verify")
     matches = match_claim_keys("What is the VerifyCo Nova price per 1k tokens now?", keys)
     assert matches and matches[0].claim_key.key == PRICE_KEY
@@ -52,10 +52,12 @@ def test_grounding_drops_superseded_docs_and_resolves_claim_key(
     assert "verify_update" not in historical.kept_doc_ids
 
 
-def test_grounding_keeps_contested_evidence(hydra: FalkorClient, verify_writer: GraphWriter) -> None:
+def test_grounding_keeps_contested_evidence(
+    falkordb: FalkorClient, verify_writer: GraphWriter
+) -> None:
     bundle = contested_bundle()
     verify_writer.write_claim(bundle, canonize(bundle), {})
-    reader = GraphReader(hydra)
+    reader = GraphReader(falkordb)
     grounding = ground(
         reader, "When does VerifyCo Atlas launch?", ("verify_c1", "verify_c2"), namespace="verify"
     )
@@ -64,9 +66,9 @@ def test_grounding_keeps_contested_evidence(hydra: FalkorClient, verify_writer: 
 
 
 def test_claim_key_matching_separates_conflicts_from_unanswerable_questions(
-    hydra: FalkorClient,
+    falkordb: FalkorClient,
 ) -> None:
-    reader = GraphReader(hydra)
+    reader = GraphReader(falkordb)
     keys = reader.all_claim_keys()
     if len(keys) != 20:
         pytest.skip("canon graph not seeded; run `make seed`")

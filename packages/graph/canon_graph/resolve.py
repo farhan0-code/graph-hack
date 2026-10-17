@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field, replace
 
 from canon_graph import queries
-from canon_graph.hydra import FalkorClient, Param, Row
-from canon_graph.querycard import HydraQueryCard, card_for
+from canon_graph.falkordb import FalkorClient, Param, Row
+from canon_graph.querycard import FalkorQueryCard, card_for
 from canon_graph.schema import (
     Assertion,
     CanonEvent,
@@ -39,7 +39,7 @@ class Resolution:
     events: tuple[CanonEvent, ...]
     current_evidence: tuple[EvidenceRow, ...]
     retired_evidence: tuple[EvidenceRow, ...]
-    query_cards: tuple[HydraQueryCard, ...] = field(default_factory=tuple)
+    query_cards: tuple[FalkorQueryCard, ...] = field(default_factory=tuple)
 
 
 @dataclass(frozen=True, slots=True)
@@ -122,17 +122,17 @@ def event_from_row(row: Row) -> CanonEvent:
 class GraphReader:
     def __init__(self, client: FalkorClient) -> None:
         self.client = client
-        self.cards: list[HydraQueryCard] = []
+        self.cards: list[FalkorQueryCard] = []
 
     def _run(self, query: queries.NamedQuery, params: dict[str, Param]) -> tuple[Row, ...]:
         result = self.client.run(query, params)
         self.cards.append(card_for(result, params))
         return result.rows
 
-    def cards_since(self, start: int) -> tuple[HydraQueryCard, ...]:
+    def cards_since(self, start: int) -> tuple[FalkorQueryCard, ...]:
         return tuple(self.cards[start:])
 
-    def take_cards(self) -> tuple[HydraQueryCard, ...]:
+    def take_cards(self) -> tuple[FalkorQueryCard, ...]:
         cards = tuple(self.cards)
         self.cards.clear()
         return cards

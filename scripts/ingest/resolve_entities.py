@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 
 from canon_extraction.entities import Resolution, extract_bindings, resolve
-from canon_graph.hydra import FalkorClient
+from canon_graph.falkordb import FalkorClient
 from canon_graph.ingest import MAX_ALIAS_CANDIDATES, GraphWriter
 from canon_graph.queries import COUNT_ALIASES_BY_RESOLUTION
 from canon_retrieval.dataset import corpus_db_path
@@ -78,7 +78,7 @@ def main() -> int:
     if not args.no_write:
         client = FalkorClient.from_env()
         if not client.healthy():
-            print(f"FalkorDB unreachable at {client.base_url}; run `make falkordb-up`")
+            print(f"FalkorDB unreachable at {client.base_url}; run `make falkor-up`")
             return 2
         writer = GraphWriter(client)
         for alias in selected:

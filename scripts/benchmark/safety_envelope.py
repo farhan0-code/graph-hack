@@ -9,7 +9,7 @@ from canon_evaluation.answering import load_env_file
 from canon_evaluation.envelope import sweep, trace_interventions
 from canon_evaluation.questions import load_question_ids, load_questions
 from canon_extraction.conflicts import load_inventory
-from canon_graph.hydra import FalkorClient
+from canon_graph.falkordb import FalkorClient
 from canon_graph.resolve import GraphReader
 from canon_retrieval.dataset import corpus_db_path
 from canon_retrieval.store import CorpusStore
@@ -22,7 +22,7 @@ def main() -> int:
     load_env_file(ROOT)
     client = FalkorClient.from_env()
     if not client.healthy():
-        print("FalkorDB unreachable; run `make falkordb-up`")
+        print("FalkorDB unreachable; run `make falkor-up`")
         return 2
     store = CorpusStore(corpus_db_path(ROOT))
     reader = GraphReader(client)

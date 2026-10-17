@@ -1,12 +1,12 @@
 from dataclasses import asdict, dataclass
 
-from canon_graph.hydra import FalkorClient, FalkorMetrics, NamedQuery, Param, QueryResult
+from canon_graph.falkordb import FalkorClient, FalkorMetrics, NamedQuery, Param, QueryResult
 
 ENGINE = "FalkorDB"
 
 
 @dataclass(frozen=True, slots=True)
-class HydraQueryCard:
+class FalkorQueryCard:
     engine: str
     operation: str
     query_name: str
@@ -22,8 +22,8 @@ class HydraQueryCard:
         return asdict(self)
 
 
-def card_for(result: QueryResult, params: dict[str, Param] | None) -> HydraQueryCard:
-    return HydraQueryCard(
+def card_for(result: QueryResult, params: dict[str, Param] | None) -> FalkorQueryCard:
+    return FalkorQueryCard(
         engine=ENGINE,
         operation=result.query.operation,
         query_name=result.query.name,
@@ -39,12 +39,12 @@ def card_for(result: QueryResult, params: dict[str, Param] | None) -> HydraQuery
 
 def timed_card(
     client: FalkorClient, query: NamedQuery, params: dict[str, Param] | None = None
-) -> tuple[QueryResult, HydraQueryCard]:
+) -> tuple[QueryResult, FalkorQueryCard]:
     before = client.metrics()
     result = client.run(query, params)
     after = client.metrics()
     card = card_for(result, params)
-    return result, HydraQueryCard(
+    return result, FalkorQueryCard(
         engine=card.engine,
         operation=card.operation,
         query_name=card.query_name,

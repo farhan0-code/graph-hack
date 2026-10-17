@@ -23,14 +23,14 @@ from canon_api.models import (
 from canon_api.stats import GraphStats, load_graph_stats
 from canon_evaluation.runner import BACKFILL_RESERVE
 from canon_extraction.conflicts import ConflictInventory, load_inventory, split_claim_key
+from canon_graph.falkordb import FalkorClient
 from canon_graph.grounding import Grounding, GroundingMode, ground
-from canon_graph.hydra import FalkorClient
 from canon_graph.queries import (
     ALIASES_BY_RESOLUTION,
     COUNT_ALIASES_BY_RESOLUTION,
     PEOPLE_FOR_ALIAS,
 )
-from canon_graph.querycard import HydraQueryCard
+from canon_graph.querycard import FalkorQueryCard
 from canon_graph.resolve import EvidenceRow, GraphReader, Resolution
 from canon_graph.schema import CanonEvent, Discovery, EdgeType, NodeKind, ResidueClass, TruthState
 from canon_retrieval.dataset import corpus_db_path
@@ -393,7 +393,7 @@ def _event(event: CanonEvent, resolution: Resolution) -> CanonEventModel:
     )
 
 
-def _card(card: HydraQueryCard) -> QueryCardModel:
+def _card(card: FalkorQueryCard) -> QueryCardModel:
     return QueryCardModel(**card.as_dict())
 
 

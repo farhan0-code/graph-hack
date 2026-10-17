@@ -1,7 +1,7 @@
 {
   "counts": {
     "ASSERTS": 43,
-    "Alias": 4193,
+    "Alias": 300,
     "Artifact": 42,
     "Assertion": 43,
     "CanonEvent": 38,
@@ -10,13 +10,13 @@
     "HAS_CLAIM": 20,
     "HAS_VALUE": 40,
     "IN_ARTIFACT": 43,
-    "Person": 35703,
+    "Person": 985,
     "Proposition": 40,
-    "RESOLVES_TO": 42999,
+    "RESOLVES_TO": 1458,
     "SELECTS": 38,
     "SUPERSEDES": 19
   },
-  "measure_seconds": 61.9,
-  "measured_at": "2026-08-19T20:12:39.395706+00:00",
+  "measure_seconds": 0.0,
+  "measured_at": "2026-10-17T12:57:58.894641+00:00",
   "namespace": "canon"
 }

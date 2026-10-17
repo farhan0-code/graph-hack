@@ -1,49 +1,49 @@
 {
-  "started_at": "2026-08-19T07:52:20.520879+00:00",
-  "hydra_url": "http://127.0.0.1:8443",
+  "started_at": "2026-10-17T12:57:39.053771+00:00",
+  "falkordb_url": "falkordb://127.0.0.1:6379",
   "passed": true,
   "checks": [
     {
       "name": "FalkorDB write/read",
       "passed": true,
       "detail": "wrote 24 nodes, read back 8 assertions",
-      "elapsed_ms": 1212.3
+      "elapsed_ms": 62.2
     },
     {
       "name": "Persistence",
       "passed": true,
       "detail": "after restart: 8 assertions still readable",
-      "elapsed_ms": 4576.1
+      "elapsed_ms": 2973.5
     },
     {
       "name": "Supersession",
       "passed": true,
       "detail": "SUPERSEDES chain $0.08 -> $0.06 via EXPLICIT_SUPERSESSION",
-      "elapsed_ms": 147.7
+      "elapsed_ms": 33.5
     },
     {
       "name": "Majority adversarial",
       "passed": true,
       "detail": "8 assertions of $0.08 vs 1 explicit update -> CURRENT=$0.06",
-      "elapsed_ms": 185.8
+      "elapsed_ms": 19.1
     },
     {
       "name": "Residue traversal",
       "passed": true,
       "detail": "reverse traversal found 1 residue row(s); proof rows=1",
-      "elapsed_ms": 144.2
+      "elapsed_ms": 19.8
     },
     {
       "name": "UNKNOWN",
       "passed": true,
       "detail": "VerifyCo Atlas.never_asserted -> UNKNOWN",
-      "elapsed_ms": 4.4
+      "elapsed_ms": 2.4
     },
     {
       "name": "CONTESTED",
       "passed": true,
       "detail": "two same-date T3 values -> CONTESTED",
-      "elapsed_ms": 308.1
+      "elapsed_ms": 39.8
     }
   ],
   "graph_writes": 34,
@@ -57,8 +57,8 @@
         "key": "VerifyCo Nova.price_per_1k_tokens"
       },
       "result_count": 1,
-      "client_round_trip_ms": 3.899,
-      "query_id": "canon-d6d5feab7005-56-claim_key_by_key",
+      "client_round_trip_ms": 1.084,
+      "query_id": "canon-4796eaa46fca-58-claim_key_by_key",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -71,8 +71,8 @@
         "proposition_id": 1434297174578693093
       },
       "result_count": 8,
-      "client_round_trip_ms": 16.82,
-      "query_id": "canon-d6d5feab7005-57-residue_reverse_traversal",
+      "client_round_trip_ms": 1.526,
+      "query_id": "canon-4796eaa46fca-59-residue_reverse_traversal",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -85,8 +85,8 @@
         "key": "VerifyCo Nova.price_per_1k_tokens"
       },
       "result_count": 1,
-      "client_round_trip_ms": 4.399,
-      "query_id": "canon-d6d5feab7005-61-claim_key_by_key",
+      "client_round_trip_ms": 5.134,
+      "query_id": "canon-4796eaa46fca-63-claim_key_by_key",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -99,8 +99,8 @@
         "proposition_id": 1434297174578693093
       },
       "result_count": 8,
-      "client_round_trip_ms": 24.25,
-      "query_id": "canon-d6d5feab7005-62-residue_reverse_traversal",
+      "client_round_trip_ms": 5.757,
+      "query_id": "canon-4796eaa46fca-64-residue_reverse_traversal",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -113,8 +113,8 @@
         "key": "VerifyCo Nova.price_per_1k_tokens"
       },
       "result_count": 1,
-      "client_round_trip_ms": 3.048,
-      "query_id": "canon-d6d5feab7005-63-claim_key_by_key",
+      "client_round_trip_ms": 2.507,
+      "query_id": "canon-4796eaa46fca-65-claim_key_by_key",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -127,8 +127,8 @@
         "claim_key_id": 1360359760586808239
       },
       "result_count": 1,
-      "client_round_trip_ms": 2.58,
-      "query_id": "canon-d6d5feab7005-64-entity_of_claim_key",
+      "client_round_trip_ms": 1.543,
+      "query_id": "canon-4796eaa46fca-66-entity_of_claim_key",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -141,8 +141,8 @@
         "claim_key_id": 1360359760586808239
       },
       "result_count": 2,
-      "client_round_trip_ms": 3.021,
-      "query_id": "canon-d6d5feab7005-65-claim_neighborhood",
+      "client_round_trip_ms": 7.522,
+      "query_id": "canon-4796eaa46fca-67-claim_neighborhood",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -155,8 +155,8 @@
         "claim_key_id": 1360359760586808239
       },
       "result_count": 2,
-      "client_round_trip_ms": 5.537,
-      "query_id": "canon-d6d5feab7005-66-claim_events",
+      "client_round_trip_ms": 5.577,
+      "query_id": "canon-4796eaa46fca-68-claim_events",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -169,8 +169,8 @@
         "event_id": 1524434316523339498
       },
       "result_count": 1,
-      "client_round_trip_ms": 120.017,
-      "query_id": "canon-d6d5feab7005-67-supersession_chain",
+      "client_round_trip_ms": 3.451,
+      "query_id": "canon-4796eaa46fca-69-supersession_chain",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -183,8 +183,8 @@
         "proposition_id": 1436220103232616527
       },
       "result_count": 1,
-      "client_round_trip_ms": 3.866,
-      "query_id": "canon-d6d5feab7005-68-residue_reverse_traversal",
+      "client_round_trip_ms": 8.3,
+      "query_id": "canon-4796eaa46fca-70-residue_reverse_traversal",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -197,8 +197,8 @@
         "proposition_id": 1434297174578693093
       },
       "result_count": 8,
-      "client_round_trip_ms": 8.782,
-      "query_id": "canon-d6d5feab7005-69-residue_reverse_traversal",
+      "client_round_trip_ms": 3.641,
+      "query_id": "canon-4796eaa46fca-71-residue_reverse_traversal",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -211,8 +211,8 @@
         "key": "VerifyCo Nova.price_per_1k_tokens"
       },
       "result_count": 1,
-      "client_round_trip_ms": 2.245,
-      "query_id": "canon-d6d5feab7005-70-claim_key_by_key",
+      "client_round_trip_ms": 2.565,
+      "query_id": "canon-4796eaa46fca-72-claim_key_by_key",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -225,8 +225,8 @@
         "claim_key_id": 1360359760586808239
       },
       "result_count": 1,
-      "client_round_trip_ms": 1.583,
-      "query_id": "canon-d6d5feab7005-71-entity_of_claim_key",
+      "client_round_trip_ms": 2.471,
+      "query_id": "canon-4796eaa46fca-73-entity_of_claim_key",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -239,8 +239,8 @@
         "claim_key_id": 1360359760586808239
       },
       "result_count": 2,
-      "client_round_trip_ms": 1.856,
-      "query_id": "canon-d6d5feab7005-72-claim_neighborhood",
+      "client_round_trip_ms": 2.284,
+      "query_id": "canon-4796eaa46fca-74-claim_neighborhood",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -253,8 +253,8 @@
         "claim_key_id": 1360359760586808239
       },
       "result_count": 2,
-      "client_round_trip_ms": 3.982,
-      "query_id": "canon-d6d5feab7005-73-claim_events",
+      "client_round_trip_ms": 3.352,
+      "query_id": "canon-4796eaa46fca-75-claim_events",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -267,8 +267,8 @@
         "event_id": 1524434316523339498
       },
       "result_count": 1,
-      "client_round_trip_ms": 155.188,
-      "query_id": "canon-d6d5feab7005-74-supersession_chain",
+      "client_round_trip_ms": 2.779,
+      "query_id": "canon-4796eaa46fca-76-supersession_chain",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -281,8 +281,8 @@
         "proposition_id": 1436220103232616527
       },
       "result_count": 1,
-      "client_round_trip_ms": 5.301,
-      "query_id": "canon-d6d5feab7005-75-residue_reverse_traversal",
+      "client_round_trip_ms": 3.037,
+      "query_id": "canon-4796eaa46fca-77-residue_reverse_traversal",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -295,8 +295,8 @@
         "proposition_id": 1434297174578693093
       },
       "result_count": 8,
-      "client_round_trip_ms": 14.882,
-      "query_id": "canon-d6d5feab7005-76-residue_reverse_traversal",
+      "client_round_trip_ms": 1.898,
+      "query_id": "canon-4796eaa46fca-78-residue_reverse_traversal",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -309,8 +309,8 @@
         "proposition_id": 1434297174578693093
       },
       "result_count": 9,
-      "client_round_trip_ms": 23.581,
-      "query_id": "canon-d6d5feab7005-81-residue_reverse_traversal",
+      "client_round_trip_ms": 2.107,
+      "query_id": "canon-4796eaa46fca-83-residue_reverse_traversal",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -323,8 +323,8 @@
         "assertion_id": 1489888345474507835
       },
       "result_count": 1,
-      "client_round_trip_ms": 10.832,
-      "query_id": "canon-d6d5feab7005-82-proof_path",
+      "client_round_trip_ms": 5.583,
+      "query_id": "canon-4796eaa46fca-84-proof_path",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -337,8 +337,8 @@
         "key": "VerifyCo Atlas.never_asserted"
       },
       "result_count": 0,
-      "client_round_trip_ms": 4.266,
-      "query_id": "canon-d6d5feab7005-83-claim_key_by_key",
+      "client_round_trip_ms": 2.38,
+      "query_id": "canon-4796eaa46fca-85-claim_key_by_key",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -351,8 +351,8 @@
         "key": "VerifyCo Atlas.launch_date"
       },
       "result_count": 1,
-      "client_round_trip_ms": 3.197,
-      "query_id": "canon-d6d5feab7005-99-claim_key_by_key",
+      "client_round_trip_ms": 1.646,
+      "query_id": "canon-4796eaa46fca-101-claim_key_by_key",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -365,8 +365,8 @@
         "claim_key_id": 1351226583513192301
       },
       "result_count": 1,
-      "client_round_trip_ms": 3.016,
-      "query_id": "canon-d6d5feab7005-100-entity_of_claim_key",
+      "client_round_trip_ms": 1.857,
+      "query_id": "canon-4796eaa46fca-102-entity_of_claim_key",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -379,8 +379,8 @@
         "claim_key_id": 1351226583513192301
       },
       "result_count": 2,
-      "client_round_trip_ms": 3.278,
-      "query_id": "canon-d6d5feab7005-101-claim_neighborhood",
+      "client_round_trip_ms": 2.573,
+      "query_id": "canon-4796eaa46fca-103-claim_neighborhood",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     },
@@ -393,8 +393,8 @@
         "claim_key_id": 1351226583513192301
       },
       "result_count": 0,
-      "client_round_trip_ms": 3.592,
-      "query_id": "canon-d6d5feab7005-102-claim_events",
+      "client_round_trip_ms": 1.5,
+      "query_id": "canon-4796eaa46fca-104-claim_events",
       "engine_rows_duration_us": null,
       "engine_ops_observed": null
     }

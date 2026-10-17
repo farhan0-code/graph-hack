@@ -1,4 +1,4 @@
-from canon_graph.hydra import NamedQuery
+from canon_graph.falkordb import NamedQuery
 from canon_graph.schema import EDGE_ENDPOINTS, EdgeType, NodeKind
 
 ASSERTION_FIELDS = (
@@ -40,8 +40,8 @@ def create_child(
         name=f"create_{child_kind.lower()}_via_{edge.lower()}",
         operation=f"CREATE {parent_kind} -{edge}-> {child_kind}",
         cypher=(
-            f"CREATE (parent:{parent_kind} {{id: $parent_id}})"
-            f"-[:{edge}]->(child:{child_kind} {{{props}}})"
+            f"MATCH (parent:{parent_kind} {{id: $parent_id}}) "
+            f"CREATE (parent)-[:{edge}]->(child:{child_kind} {{{props}}})"
         ),
     )
 
@@ -73,8 +73,8 @@ def create_source(
         name=f"create_{source_kind.lower()}_via_{edge.lower()}",
         operation=f"CREATE {source_kind} -{edge}-> {target_kind}",
         cypher=(
-            f"CREATE (source:{source_kind} {{{props}}})"
-            f"-[:{edge}]->(target:{target_kind} {{id: $target_id}})"
+            f"MATCH (target:{target_kind} {{id: $target_id}}) "
+            f"CREATE (source:{source_kind} {{{props}}})-[:{edge}]->(target)"
         ),
     )
 
@@ -84,8 +84,9 @@ def link(source_kind: NodeKind, edge: EdgeType, target_kind: NodeKind) -> NamedQ
         name=f"link_{edge.lower()}",
         operation=f"CREATE {source_kind} -{edge}-> {target_kind}",
         cypher=(
-            f"CREATE (source:{source_kind} {{id: $source_id}})"
-            f"-[:{edge}]->(target:{target_kind} {{id: $target_id}})"
+            f"MATCH (source:{source_kind} {{id: $source_id}}), "
+            f"(target:{target_kind} {{id: $target_id}}) "
+            f"CREATE (source)-[:{edge}]->(target)"
         ),
     )
 
@@ -173,7 +174,11 @@ def unwind_create_edges(edge: EdgeType) -> NamedQuery:
     return NamedQuery(
         name=f"unwind_create_{edge.lower()}",
         operation=f"UNWIND batch CREATE -{edge}->",
-        cypher=f"UNWIND $rows AS row CREATE (a {{id: row.s}})-[:{edge}]->(b {{id: row.t}})",
+        cypher=(
+            f"UNWIND $rows AS row "
+            f"MATCH (a {{id: row.s}}), (b {{id: row.t}}) "
+            f"CREATE (a)-[:{edge}]->(b)"
+        ),
     )
 
 

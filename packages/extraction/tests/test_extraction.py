@@ -36,7 +36,8 @@ class DictDocuments:
 
 @pytest.fixture(scope="module")
 def documents() -> DictDocuments:
-    return DictDocuments([Document(**row) for row in json.loads(FIXTURES.read_text())])
+    data = json.loads(FIXTURES.read_text(encoding="utf-8"))
+    return DictDocuments([Document(**row) for row in data])
 
 
 def test_value_variants_cover_list_and_percent_forms() -> None:

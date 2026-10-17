@@ -2,7 +2,7 @@
 name = "canon-graph"
 version = "0.1.0"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = ["falkordb>=1.0"]
 
 [build-system]
 requires = ["hatchling"]

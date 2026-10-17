@@ -59,7 +59,7 @@ service = CanonService(ROOT)
 
 @app.get("/health")
 def health() -> dict[str, object]:
-    return {"hydra": service.healthy(), "corpus_documents": service.store.count()}
+    return {"falkordb": service.healthy(), "corpus_documents": service.store.count()}
 
 
 @app.get("/dashboard")

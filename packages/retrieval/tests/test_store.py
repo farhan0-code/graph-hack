@@ -11,7 +11,7 @@ FIXTURES = Path(__file__).parent / "fixtures" / "gold_excerpts.json"
 
 
 def fixture_documents() -> list[Document]:
-    return [Document(**row) for row in json.loads(FIXTURES.read_text())]
+    return [Document(**row) for row in json.loads(FIXTURES.read_text(encoding="utf-8"))]
 
 
 @pytest.fixture

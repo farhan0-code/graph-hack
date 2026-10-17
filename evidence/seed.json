@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-08-19T07:34:42.778441+00:00",
+  "started_at": "2026-10-17T07:18:38.224281+00:00",
   "corpus_documents": 511958,
   "claims": [
     {
@@ -251,7 +251,7 @@
           "true",
           "enforcement"
         ],
-        "fts_query": "(\"do_sample false temperature 0 top_k 1 explicit generator\") AND (\"deterministic\" OR \"true\" OR \"enforcement\")",
+        "fts_query": "(\"do_sample false temperature 0 top_k 1 explicit generator\" OR \"do_sample false temperature 0 top_k 1 explicit generator\" OR \"do_sample false temperature 0 top_k 1 explicit generator\" OR \"do_sample false temperature 0 top_k 1 and explicit generator\" OR \"do_sample false temperature 0 top_k 1 and explicit generator\") AND (\"deterministic\" OR \"true\" OR \"enforcement\")",
         "fts_hits": 0,
         "rejected_for_anchoring": 0,
         "verified_structured": 0,
@@ -288,7 +288,7 @@
           "peak",
           "sessions"
         ],
-        "fts_query": "(\"50 120 220 QPS 120 concurrent sessions\" OR \"50 120 220 QPS 120 concurrent sessions\" OR \"50 120 220 QPS 120 concurrent sessions\" OR \"50 120 and 220 QPS 120 concurrent sessions\" OR \"50 120 and 220 QPS 120 concurrent sessions\") AND (\"copperfield\" OR \"nimbus\") AND (\"qps\" OR \"peak\" OR \"sessions\")",
+        "fts_query": "(\"50 120 220 QPS 120 concurrent sessions\" OR \"50 120 220 QPS 120 concurrent sessions\" OR \"50 120 220 QPS 120 concurrent sessions\" OR \"50 120 220 QPS 120 concurrent sessions\" OR \"50 120 220 QPS and 120 concurrent sessions\" OR \"50 120 220 QPS and 120 concurrent sessions\") AND (\"copperfield\" OR \"nimbus\") AND (\"qps\" OR \"peak\" OR \"sessions\")",
         "fts_hits": 0,
         "rejected_for_anchoring": 0,
         "verified_structured": 0,
@@ -644,7 +644,7 @@
           "bucket",
           "cutoffs"
         ],
-        "fts_query": "(\"short 64 medium 64 512 long 512\") AND (\"canvas\") AND (\"prompt\" OR \"len\" OR \"bucket\" OR \"cutoffs\")",
+        "fts_query": "(\"short 64 medium 64 512 long 512\" OR \"short 64 medium 64 512 long 512\" OR \"short 64 medium 64 512 long 512\" OR \"short 64 medium 64 512 and long 512\" OR \"short 64 medium 64 512 and long 512\") AND (\"canvas\") AND (\"prompt\" OR \"len\" OR \"bucket\" OR \"cutoffs\")",
         "fts_hits": 1,
         "rejected_for_anchoring": 0,
         "verified_structured": 0,
@@ -757,7 +757,7 @@
           "invoice",
           "delivery"
         ],
-        "fts_query": "(\"raw PO LINEUUID Monday morning delivery\") AND (\"clearedge\") AND (\"fingerprint\" OR \"invoice\" OR \"delivery\")",
+        "fts_query": "(\"raw PO LINEUUID Monday morning delivery\" OR \"raw PO LINEUUID Monday morning delivery\" OR \"raw PO LINEUUID Monday morning delivery\" OR \"raw PO LINEUUID and Monday morning delivery\" OR \"raw PO LINEUUID and Monday morning delivery\") AND (\"clearedge\") AND (\"fingerprint\" OR \"invoice\" OR \"delivery\")",
         "fts_hits": 0,
         "rejected_for_anchoring": 0,
         "verified_structured": 0,
@@ -949,7 +949,7 @@
           "tool",
           "signal"
         ],
-        "fts_query": "(\"per request enable_tool_signal flag default true for hosted\") AND (\"openai\") AND (\"enable\" OR \"tool\" OR \"signal\")",
+        "fts_query": "(\"per request enable_tool_signal flag default true for hosted\" OR \"per request enable_tool_signal flag default true for hosted\" OR \"per request enable_tool_signal flag default true for hosted\" OR \"per request enable_tool_signal flag and default true for hosted\" OR \"per request enable_tool_signal flag and default true for hosted\") AND (\"openai\") AND (\"enable\" OR \"tool\" OR \"signal\")",
         "fts_hits": 0,
         "rejected_for_anchoring": 0,
         "verified_structured": 0,
@@ -998,9 +998,9 @@
       }
     }
   ],
-  "nodes_created": 203,
-  "edges_created": 203,
-  "skipped_existing": 1,
+  "nodes_created": 0,
+  "edges_created": 0,
+  "skipped_existing": 141,
   "verified_structured_residue_total": 0,
   "derived_free_text_residue_total": 0,
   "not_an_assertion_total": 2,

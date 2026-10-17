@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 
-import { EvidenceCard, HydraQueryCard } from "@/components/evidence"
+import { EvidenceCard, FalkorQueryCard } from "@/components/evidence"
 import { Icon } from "@/components/icon"
 import { Field, Panel, StateBadge } from "@/components/primitives"
 import type { AskResponse } from "@/lib/api"
@@ -173,7 +173,7 @@ export function AskClient({ samples }: { samples: string[] }) {
           <Panel title="FalkorDB queries">
             <div className="flex flex-col gap-3">
               {response.query_cards.map((card) => (
-                <HydraQueryCard key={card.query_id} card={card} />
+                <FalkorQueryCard key={card.query_id} card={card} />
               ))}
             </div>
           </Panel>

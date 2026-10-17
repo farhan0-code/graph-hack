@@ -54,7 +54,7 @@ export default async function LandingPage() {
           <Reveal delay={40}>
             <span className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-3.5 py-1.5 text-xs font-light tracking-wide text-accent">
               <Icon name="time-quarter-pass" size={14} />
-              Temporal truth integrity · FalkorDB · EnterpriseRAG-Bench
+              Temporal truth integrity · FalkorDB OSS · EnterpriseRAG-Bench
             </span>
           </Reveal>
 

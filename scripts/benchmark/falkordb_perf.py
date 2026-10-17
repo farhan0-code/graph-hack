@@ -4,7 +4,7 @@ import json
 import sys
 from pathlib import Path
 
-from canon_graph.hydra import FalkorClient
+from canon_graph.falkordb import FalkorClient
 from canon_graph.perf import run_perf
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -27,7 +27,7 @@ def main() -> int:
 
     client = FalkorClient.from_env()
     if not client.healthy():
-        print(f"FalkorDB unreachable at {client.base_url}; run `make falkordb-up`")
+        print(f"FalkorDB unreachable at {client.host}:{client.port}; run `make falkordb-up`")
         return 2
     report = run_perf(
         client,

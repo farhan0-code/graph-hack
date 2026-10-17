@@ -478,7 +478,7 @@
       "derived_free_text_residue_count": null,
       "verified_resurrection_count": 0,
       "documents_inspected": true,
-      "demo_notes": "Strongest Hydra sentence in the gold set: the newer doc literally says it supersedes the older page. Unit change tokens\u2192GiB.",
+      "demo_notes": "Strongest Falkor sentence in the gold set: the newer doc literally says it supersedes the older page. Unit change tokens\u2192GiB.",
       "story": "cost model unit change tokens -> GiB",
       "tentative_demo_score": 7,
       "old_doc_id": "dsid_4e65166659394a90922be6a5c7b110a8",

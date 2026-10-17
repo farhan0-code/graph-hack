@@ -16,7 +16,6 @@ CANON — Final Competition PRD.md
 research/conflict_docs/
 data/
 falkordb-data/
-.falkordb/
 *.parquet
 *.sqlite
 *.sqlite-journal

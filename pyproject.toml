@@ -36,7 +36,7 @@ select = ["E", "F", "I", "UP", "B", "SIM", "N"]
 
 [tool.pytest.ini_options]
 testpaths = ["packages", "services"]
-markers = ["hydra: requires a running FalkorDB instance"]
+markers = ["falkordb: requires a running FalkorDB instance"]
 addopts = "-q"
 
 [tool.ruff.lint.isort]

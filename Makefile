@@ -1,16 +1,19 @@
-.PHONY: hydra-up hydra-down verify test lint index seed graph-stats entities benchmark judge export-answers aggregate perf envelope mechanism api
+.PHONY: falkordb-up falkor-up falkordb-down falkor-down verify test lint index seed graph-stats entities benchmark judge export-answers aggregate perf envelope mechanism api
 
 export UID := $(shell id -u)
 export GID := $(shell id -g)
 
-hydra-up:
-	mkdir -p falkordb-data/cache falkordb-data/minio
-	printf '%s\n' 'local-development-token-32-bytes' > falkordb-data/auth-token
+falkordb-up:
+	mkdir -p falkordb-data
 	docker compose up -d
 	uv run python scripts/verify/wait_for_falkordb.py
 
-hydra-down:
+falkor-up: falkordb-up
+
+falkordb-down:
 	docker compose down
+
+falkor-down: falkordb-down
 
 verify:
 	uv run python scripts/verify/verify_falkordb.py

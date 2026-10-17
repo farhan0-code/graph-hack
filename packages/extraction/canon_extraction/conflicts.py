@@ -43,7 +43,7 @@ class ConflictInventory:
 
 
 def load_inventory(path: Path) -> ConflictInventory:
-    raw = json.loads(path.read_text())
+    raw = json.loads(path.read_text(encoding="utf-8"))
     records = tuple(
         ConflictRecord(
             question_id=item["question_id"],

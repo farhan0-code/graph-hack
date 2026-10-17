@@ -3,7 +3,7 @@ from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 
 from canon_graph import queries
-from canon_graph.hydra import FalkorClient, NamedQuery, Param
+from canon_graph.falkordb import FalkorClient, NamedQuery, Param
 from canon_graph.ids import Namespace, node_id
 from canon_graph.ingest import BATCH_LIMIT, GraphWriter
 from canon_graph.schema import EdgeType, NodeKind
@@ -38,7 +38,7 @@ class LatencySample:
 @dataclass(slots=True)
 class PerfReport:
     measured_at: str
-    hydra_url: str
+    falkordb_url: str
     nodes_written: int
     edges_written: int
     write_seconds: float
@@ -53,7 +53,7 @@ class PerfReport:
     def as_dict(self) -> dict[str, object]:
         return {
             "measured_at": self.measured_at,
-            "hydra_url": self.hydra_url,
+            "falkordb_url": self.falkordb_url,
             "nodes_written": self.nodes_written,
             "edges_written": self.edges_written,
             "write_seconds": round(self.write_seconds, 2),
@@ -160,7 +160,7 @@ def run_perf(
     chain_ids = sorted({node for pair in chain_pairs for node in pair})
     report = PerfReport(
         measured_at=datetime.now(UTC).isoformat(),
-        hydra_url=client.base_url,
+        falkordb_url=client.base_url,
         nodes_written=len(node_ids) + len(chain_ids),
         edges_written=edges,
         write_seconds=write_seconds,

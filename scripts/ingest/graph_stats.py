@@ -5,7 +5,7 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 
-from canon_graph.hydra import FalkorClient
+from canon_graph.falkordb import FalkorClient
 from canon_graph.queries import count_edges_in_namespace, count_nodes_in_namespace
 from canon_graph.schema import EdgeType, NodeKind
 
@@ -17,7 +17,7 @@ NAMESPACE = "canon"
 def main() -> int:
     client = FalkorClient.from_env()
     if not client.healthy():
-        print(f"FalkorDB unreachable at {client.base_url}; run `make falkordb-up`")
+        print(f"FalkorDB unreachable at {client.base_url}; run `make falkor-up`")
         return 2
     scope = {"namespace": NAMESPACE}
     started = time.perf_counter()

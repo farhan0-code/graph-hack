@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
-import { EvidenceCard, HydraQueryCard } from "@/components/evidence"
+import { EvidenceCard, FalkorQueryCard } from "@/components/evidence"
 import { Icon } from "@/components/icon"
 import { Field, Panel, StateBadge } from "@/components/primitives"
 import { Page } from "@/components/shell"
@@ -117,7 +117,7 @@ export default async function TruthChangePage({ params }: { params: Promise<{ qu
         <Panel title="FalkorDB queries" subtitle="Every query that produced this page">
           <div className="flex flex-col gap-3">
             {change.query_cards.map((card) => (
-              <HydraQueryCard key={card.query_id} card={card} />
+              <FalkorQueryCard key={card.query_id} card={card} />
             ))}
           </div>
         </Panel>

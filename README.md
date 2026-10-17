@@ -2,14 +2,10 @@
 
 <img src="assets/cover.jpg" alt="Canon — old truth shouldn't become new context" width="100%" />
 
-&nbsp;
-
-
-
-[![CI](https://github.com/farhan0-code/graph-hack/actions/workflows/verify.yml/badge.svg)](https://github.com/farhan0-code/graph-hack/actions/workflows/verify.yml)
+[![CI](https://github.com/toufiqfarhan0/falkor-hack/actions/workflows/verify.yml/badge.svg)](https://github.com/toufiqfarhan0/falkor-hack/actions/workflows/verify.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Tests](https://img.shields.io/badge/tests-71%20passing-10b981)
-![Database](https://img.shields.io/badge/database-FalkorDB%20OSS-7dd3a0)
+![Database](https://img.shields.io/badge/database-FalkorDB-7dd3a0)
 ![Benchmark](https://img.shields.io/badge/benchmark-EnterpriseRAG--Bench-131315)
 ![Stack](https://img.shields.io/badge/Python%203.12%20·%20Next.js%2016%20·%20SQLite%20FTS5-1f1f23)
 
@@ -47,11 +43,11 @@ Only the context topology changes.
 
 ## Judge Canon in 90 seconds
 
-**Live console: [canon-bay.vercel.app](https://canon-bay.vercel.app)** — frontend on Vercel,
-and behind it a dedicated server running the real thing: FalkorDB against its S3 backend, the
+**Console: [http://localhost:3000](http://localhost:3000)** — frontend on Next.js,
+and behind it a local server running the real thing: FalkorDB, the
 FastAPI service, and the full 511,958-document corpus indexed on that machine from the published
-dataset. No snapshot, no cached analytics — every answer on the live site is a live FalkorDB
-traversal, and the graph going down takes the answers with it. Everything also runs locally in
+dataset. No snapshot, no cached analytics — every answer on the console is a live FalkorDB
+traversal, and the graph going down takes the answers with it. Everything runs locally in
 four commands.
 
 Four numbers, all reproducible from this repository:
@@ -82,6 +78,7 @@ digest, dataset revision, SHA-256 of every result file).
 
 - [The problem I set out to solve](#the-problem-i-set-out-to-solve)
 - [What I built](#what-i-built)
+- [Addressing the challenge: three core pillars](#addressing-the-challenge-three-core-pillars)
 - [Architecture](#architecture)
 - [The resolution loop, step by step](#the-resolution-loop-step-by-step)
 - [How I integrated FalkorDB](#how-i-integrated-falkordb)
@@ -123,7 +120,7 @@ A pipeline where the graph decides what the model is allowed to read:
 2. **Extract** — the 20 official conflict claim neighborhoods, deeply: exact evidence spans,
    structured-field detection, stance markers, plus a corpus-wide residue scan per retired value.
    Deep reasoning locally.
-3. **Canonize** — resolve which value is current, in a fixed priority order where **explicit
+3. **Stratify** — resolve which value is current, in a fixed priority order where **explicit
    supersession language beats majority vote**. Eight documents repeating the old price lose to one
    later document that says the price changed.
 4. **Temporal Cut** — at question time, walk retrieved candidates back to their claims in FalkorDB, label
@@ -141,6 +138,29 @@ Every current-state answer is exactly one of **`CANON`**, **`CONTESTED`**, **`UN
 evidence does not establish a winner, Canon shows the fork instead of inventing one — the 20
 official `info_not_found` questions resolve to `UNKNOWN` 20/20, and one conflict stays `CONTESTED`
 because neither timestamps nor language order it.
+
+## Addressing the challenge: three core pillars
+
+Canon addresses the hackathon's core challenge focus areas simultaneously, ordered by how the system operates across an enterprise:
+
+### 1. Company Brain
+Connecting corporate knowledge, maintaining temporal currency, and resolving organizational ownership across 511,958 documents:
+- **Unified enterprise graph**: Ingests diverse sources (Confluence wikis, Jira tickets, Google Docs, and Gmail archives) into a single connected graph in FalkorDB, distinguishing mentions from time-bound truths.
+- **Enterprise identity resolution**: Maps **177,377 people** and **251,498 aliases** derived verbatim from explicit `Name <email>` bindings across the corpus. Ambiguous identities are preserved as explicit forks rather than falsely merged.
+- **Keeping knowledge current as things change**: Detects where superseded claims linger as lexical residue across company wikis and eliminates them from present-tense context before they poison decision-making.
+- **Auditable provenance**: Every answer is grounded in exact source document IDs, character-level spans, and stance classifications.
+
+### 2. Agents That Act on Connected Data
+Using FalkorDB graph traversals as active decision tools rather than a passive visualization layer:
+- **Multi-hop Cypher reasoning**: At runtime, walks retrieved candidate documents back through claims, propositions, and variable-depth supersession lineages (`SUPERSEDES*1..10`).
+- **Graph-driven context action**: Executes the **Temporal Cut**—actively modifying context topology by evicting invalidated documents and backfilling from the same BM25 ranking to maintain exact document-count parity (10 in, 10 out).
+- **Verifiable execution receipts**: Returns a **Temporal Context Receipt** with every grounding decision, including the exact FalkorDB query cards with microsecond execution timings and SHA-256 context fingerprints.
+
+### 3. Agent Memory and State Coordination
+Providing durable, versioned episodic memory and inter-agent coordination:
+- **Memory evolution without data loss**: When enterprise facts update, Canon records a new `CanonEvent` linked via `[:SUPERSEDES]` to earlier events. Past memory is preserved for historical queries (`mode: "historical"`), while current grounding receives only valid truth.
+- **Durable cross-session persistence**: State lives durably on disk in FalkorDB (`falkordb-data/dump.rdb`) and survives complete container restarts with zero state corruption.
+- **Inter-agent state handoffs**: Exposes `/v1/ground` as a standardized context-gating contract between upstream retrieval agents and downstream answering models, coordinating verified context across agent boundaries.
 
 ## Architecture
 
@@ -176,13 +196,11 @@ Entity ──HAS_CLAIM──▶ ClaimKey ──HAS_VALUE──▶ Proposition �
 | `CanonEvent` | The event that selects a value as current and may `SUPERSEDES` a prior event. History is never overwritten. |
 
 Document text lives in SQLite FTS5. The truth topology — what supersedes what, and which evidence
-may ground a present-tense answer — lives entirely in FalkorDB, which runs against an S3-compatible
-object store (MinIO in `docker-compose.yml`) because its writer-lease and manifest paths need
-conditional writes a plain local filesystem does not implement.
+may ground a present-tense answer — lives entirely in FalkorDB, which runs FalkorDB via `docker-compose.yml`.
 
 ## The resolution loop, step by step
 
-Canonization runs in a fixed priority order, and the order is load-bearing:
+Truth stratification runs in a fixed priority order, and the order is load-bearing:
 
 1. **Explicit supersession** — `"moved from X to Y"`, `"old doc says X — that's outdated"`. The
    strongest signal, and the only one allowed to beat corroboration.
@@ -460,9 +478,9 @@ identity index** built by the deterministic scan (177,377 people / 251,498 alias
 lexical store); a **stratified sample of 35,703 Person and 4,193 Alias nodes** is materialised as
 real FalkorDB vertices for graph traversal. `evidence/entities.json` records both.
 
-## The live console
+## The console
 
-Hosted at **[canon-bay.vercel.app](https://canon-bay.vercel.app)**, backed by a dedicated server
+Hosted at **[http://localhost:3000](http://localhost:3000)**, backed by a local server
 running FalkorDB and the full corpus — every page is a live traversal, not a cached snapshot.
 The app leads with a truth dashboard, not a chat box; every number on it is a graph query, and
 zeros are shown as zeros.
@@ -587,18 +605,18 @@ uv run pytest -m "not falkordb"   # 56 unit tests, no network, < 1 s
 uv run pytest -m falkordb         # 15 integration tests against the live graph
 ```
 
-The suite covers canonization ordering (including the 8-vs-1 adversarial case), id determinism,
+The suite covers truth stratification ordering (including the 8-vs-1 adversarial case), id determinism,
 structured-field and stance parsing, value variants, residue classification, grounding document
 dispositions, metric math, the judge plumbing, partial-run protection, and full write→restart→read
-round trips against a real FalkorDB. CI boots the actual FalkorDB image with MinIO and runs all
+round trips against a real FalkorDB. CI boots the actual FalkorDB image and runs all
 of it on every push.
 
 ## Attribution
 
 Canon is built on other people's work. Everything below is used under its own licence.
 
-**Database** — [FalkorDB](https://github.com/hydra-db/falkordb) (AGPL-3.0), run from the
-published `ghcr.io/hydra-db/falkordb` image with MinIO as the S3-compatible backend.
+**Database** — [FalkorDB](https://github.com/FalkorDB/FalkorDB) (Server Side Public License), run from the
+published `falkordb/falkordb:latest` Docker image.
 
 **Datasets** — [EnterpriseRAG-Bench](https://huggingface.co/datasets/onyx-dot-app/EnterpriseRAG-Bench)
 by Onyx: 511,962 documents and 500 questions. Documents, questions, gold answers and the
@@ -617,7 +635,7 @@ ships with Python.
 and judging; Qwen3 via an OpenAI-compatible local endpoint for offline runs. Every result file
 records which model produced it.
 
-No code was copied from another project. The lexical store, claim graph, canonization order,
+No code was copied from another project. The lexical store, claim graph, stratification order,
 residue sweep, identity resolution and evaluation harness in this repository are original.
 
 ## License

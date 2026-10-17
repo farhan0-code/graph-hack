@@ -58,7 +58,7 @@ class ConflictResult:
     historical_keeps_retired_gold: bool
     historical_drops_current_gold: bool
     timing: Timing
-    hydra_query_names: tuple[str, ...]
+    graph_query_names: tuple[str, ...]
 
 
 @dataclass(frozen=True, slots=True)
@@ -276,7 +276,7 @@ def run_conflict(
         ),
         historical_drops_current_gold=record.new_doc_id not in historical.kept_doc_ids,
         timing=Timing(round(retrieval_ms, 2), round(grounding_ms, 2)),
-        hydra_query_names=tuple(dict.fromkeys(card.query_name for card in grounding.query_cards)),
+        graph_query_names=tuple(dict.fromkeys(card.query_name for card in grounding.query_cards)),
     )
 
 

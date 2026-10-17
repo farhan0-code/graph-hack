@@ -8,7 +8,7 @@ from canon_evaluation.answering import DEFAULT_MODEL, load_answer_model, load_en
 from canon_evaluation.questions import load_question_ids, load_questions
 from canon_evaluation.runner import TOP_K, run_benchmark
 from canon_extraction.conflicts import load_inventory
-from canon_graph.hydra import FalkorClient
+from canon_graph.falkordb import FalkorClient
 from canon_graph.resolve import GraphReader
 from canon_retrieval.dataset import corpus_db_path
 from canon_retrieval.store import CorpusStore
@@ -46,7 +46,7 @@ def main() -> int:
     load_env_file(ROOT)
     client = FalkorClient.from_env()
     if not client.healthy():
-        print(f"FalkorDB unreachable at {client.base_url}; run `make falkordb-up`")
+        print(f"FalkorDB unreachable at {client.base_url}; run `make falkor-up`")
         return 2
     db_path = corpus_db_path(ROOT)
     if not db_path.exists():

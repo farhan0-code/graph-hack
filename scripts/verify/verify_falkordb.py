@@ -4,14 +4,14 @@ import subprocess
 import sys
 from pathlib import Path
 
-from canon_graph.hydra import FalkorClient
+from canon_graph.falkordb import FalkorClient
 from canon_graph.verify import Verifier
 
 ROOT = Path(__file__).resolve().parents[2]
 EVIDENCE = ROOT / "evidence" / "verify.json"
 
 
-def restart_hydra() -> None:
+def restart_falkor() -> None:
     subprocess.run(
         ["docker", "compose", "restart", "falkordb"], cwd=ROOT, check=True, capture_output=True
     )
@@ -20,9 +20,9 @@ def restart_hydra() -> None:
 def main() -> int:
     client = FalkorClient.from_env()
     if not client.healthy():
-        print(f"FalkorDB unreachable at {client.base_url}; run `make falkordb-up`")
+        print(f"FalkorDB unreachable at {client.host}:{client.port}; run `make falkordb-up`")
         return 2
-    report = Verifier(client, restart_hydra).run()
+    report = Verifier(client, restart_falkor).run()
     width = max(len(check.name) for check in report.checks) + 4
     for check in report.checks:
         dots = "." * (width - len(check.name))

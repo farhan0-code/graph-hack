@@ -4,7 +4,7 @@ from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 
 from canon_graph.canonize import AssertionInput, ClaimBundle, SupersessionSignal, canonize
-from canon_graph.hydra import FalkorClient
+from canon_graph.falkordb import FalkorClient
 from canon_graph.ids import Namespace, proposition_id
 from canon_graph.ingest import GraphWriter
 from canon_graph.resolve import GraphReader
@@ -33,7 +33,7 @@ class CheckResult:
 @dataclass(slots=True)
 class VerifyReport:
     started_at: str
-    hydra_url: str
+    falkordb_url: str
     checks: list[CheckResult] = field(default_factory=list)
     graph_writes: int = 0
     query_cards: list[dict[str, object]] = field(default_factory=list)
@@ -45,7 +45,7 @@ class VerifyReport:
     def as_dict(self) -> dict[str, object]:
         return {
             "started_at": self.started_at,
-            "hydra_url": self.hydra_url,
+            "falkordb_url": self.falkordb_url,
             "passed": self.passed,
             "checks": [asdict(check) for check in self.checks],
             "graph_writes": self.graph_writes,

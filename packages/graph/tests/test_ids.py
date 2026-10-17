@@ -43,7 +43,7 @@ def test_ids_fit_in_signed_int64() -> None:
 
 
 def test_inventory_claim_keys_do_not_collide() -> None:
-    inventory = json.loads(INVENTORY.read_text())
+    inventory = json.loads(INVENTORY.read_text(encoding="utf-8"))
     ids: set[int] = set()
     for conflict in inventory["conflicts"]:
         key = conflict["claim_key"]

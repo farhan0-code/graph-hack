@@ -5,8 +5,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from canon_extraction.conflicts import load_inventory
+from canon_graph.falkordb import FalkorClient
 from canon_graph.grounding import ground
-from canon_graph.hydra import FalkorClient
 from canon_graph.resolve import GraphReader
 from canon_retrieval.dataset import corpus_db_path
 from canon_retrieval.store import CorpusStore

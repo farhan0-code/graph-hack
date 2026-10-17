@@ -54,7 +54,7 @@ def main() -> int:
             "inspect",
             "--format",
             "{{index .RepoDigests 0}}",
-            "ghcr.io/hydra-db/falkordb:latest",
+            "falkordb/falkordb:latest",
         ]
     )
     parquet = documents_parquet_path()
@@ -65,7 +65,7 @@ def main() -> int:
     manifest = {
         "generated_at": datetime.now(UTC).isoformat(),
         "git_commit": run(["git", "-C", str(ROOT), "rev-parse", "HEAD"]),
-        "falkordb_image": image_digest or "ghcr.io/hydra-db/falkordb:latest (digest unavailable)",
+        "falkordb_image": image_digest or "falkordb/falkordb:latest (digest unavailable)",
         "dataset": {
             "repo": "onyx-dot-app/EnterpriseRAG-Bench",
             "revision": dataset_revision,

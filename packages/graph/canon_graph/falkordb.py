@@ -1,22 +1,18 @@
-import json
 import os
 import time
-import urllib.error
-import urllib.request
 from dataclasses import dataclass
 from itertools import count
 from uuid import uuid4
+
+from falkordb import FalkorDB
 
 Cell = int | float | str | bool | None | list["Cell"]
 Row = dict[str, Cell]
 Param = int | float | str | bool | list["Param"] | dict[str, "Param"]
 
-DEFAULT_HTTP = "http://127.0.0.1:8443"
-DEFAULT_METRICS = "http://127.0.0.1:9090/metrics"
-DEFAULT_TOKEN = "local-development-token-32-bytes"
-TRANSIENT_CODES = frozenset(
-    {"not_cell_writer", "routing", "fencing", "contention", "internal", "query_timeout"}
-)
+DEFAULT_HOST = os.environ.get("FALKOR_HOST", "127.0.0.1")
+DEFAULT_PORT = int(os.environ.get("FALKOR_PORT", "6379"))
+DEFAULT_GRAPH = os.environ.get("FALKOR_GRAPH", "default")
 TRANSIENT_RETRY_SECONDS = 60.0
 WRITER_PROBE_ID = 4611686018427387900
 
@@ -78,58 +74,79 @@ class FalkorMetrics:
     cache_resident_bytes: int
 
 
-def decode_cell(cell: dict[str, object]) -> Cell:
-    cell_type = cell.get("type")
-    if cell_type == "null":
+def _to_cell(value: object) -> Cell:
+    if value is None:
         return None
-    value = cell.get("value")
-    if cell_type == "list":
-        items = value if isinstance(value, list) else []
-        return [decode_cell(item) for item in items if isinstance(item, dict)]
-    if isinstance(value, int | float | str | bool):
+    if isinstance(value, bool | int | float | str):
         return value
-    raise FalkorError("decode", f"unsupported cell {cell!r}", "decode")
+    if isinstance(value, list):
+        return [_to_cell(item) for item in value]
+    return str(value)
 
 
 class FalkorClient:
+    """
+    FalkorDB client wrapper providing a consistent query and metric interface.
+    """
+
     def __init__(
         self,
-        base_url: str = DEFAULT_HTTP,
-        token: str = DEFAULT_TOKEN,
-        metrics_url: str = DEFAULT_METRICS,
-        cell_id: str = "cell-0",
-        namespace: str = "default",
-        graph: str = "default",
+        host: str = DEFAULT_HOST,
+        port: int = DEFAULT_PORT,
+        graph: str = DEFAULT_GRAPH,
         timeout_seconds: float = 60.0,
+        # Legacy kwargs kept for call-site compatibility
+        base_url: str = "",
+        token: str = "",
+        metrics_url: str = "",
+        cell_id: str = "",
+        namespace: str = "",
     ) -> None:
-        self.base_url = base_url.rstrip("/")
-        self.metrics_url = metrics_url
-        self.cell_id = cell_id
-        self.namespace = namespace
+        self._host = host
+        self._port = port
         self.graph = graph
         self.timeout_seconds = timeout_seconds
-        self._headers = {
-            "Authorization": f"Bearer {token}",
-            "X-Graph-Namespace": namespace,
-            "Content-Type": "application/json",
-        }
+        self.base_url = f"falkordb://{host}:{port}"
         self._session = uuid4().hex[:12]
         self._sequence = count(1)
+        self._db: FalkorDB | None = None
+        self._g = None
+        self._metrics = _MutableMetrics()
+
+    @property
+    def host(self) -> str:
+        return self._host
+
+    @property
+    def port(self) -> int:
+        return self._port
+
+    # ------------------------------------------------------------------
+    # Construction helpers
+    # ------------------------------------------------------------------
+
+    @classmethod
+    def from_env(cls) -> "FalkorClient":
+        host = os.environ.get("FALKOR_HOST", DEFAULT_HOST)
+        port = int(os.environ.get("FALKOR_PORT", str(DEFAULT_PORT)))
+        graph = os.environ.get("FALKOR_GRAPH", DEFAULT_GRAPH)
+        return cls(host=host, port=port, graph=graph)
+
+    # ------------------------------------------------------------------
+    # Internal helpers
+    # ------------------------------------------------------------------
+
+    def _connect(self) -> None:
+        if self._db is None:
+            self._db = FalkorDB(host=self._host, port=self._port)
+            self._g = self._db.select_graph(self.graph)
 
     def next_query_id(self, query_name: str) -> str:
         return f"canon-{self._session}-{next(self._sequence)}-{query_name}"
 
-    @classmethod
-    def from_env(cls) -> "FalkorClient":
-        return cls(
-            base_url=os.environ.get("HYDRA_HTTP", DEFAULT_HTTP),
-            token=os.environ.get("HYDRA_TOKEN", DEFAULT_TOKEN),
-            metrics_url=os.environ.get("HYDRA_METRICS", DEFAULT_METRICS),
-        )
-
-    @property
-    def query_url(self) -> str:
-        return f"{self.base_url}/v1/graphs/{self.graph}/query"
+    # ------------------------------------------------------------------
+    # Public query interface
+    # ------------------------------------------------------------------
 
     def run(
         self,
@@ -140,9 +157,11 @@ class FalkorClient:
         deadline = time.monotonic() + TRANSIENT_RETRY_SECONDS
         while True:
             try:
-                return self._run_once(query, params, consistency)
+                return self._run_once(query, params)
             except FalkorError as error:
-                if error.code not in TRANSIENT_CODES or time.monotonic() >= deadline:
+                if time.monotonic() >= deadline:
+                    raise
+                if error.code != "unreachable":
                     raise
                 time.sleep(0.5)
 
@@ -150,72 +169,46 @@ class FalkorClient:
         self,
         query: NamedQuery,
         params: dict[str, Param] | None,
-        consistency: str | None,
     ) -> QueryResult:
-        body: dict[str, object] = {
-            "cell_id": self.cell_id,
-            "query": query.cypher,
-            "query_id": self.next_query_id(query.name),
-        }
-        if params:
-            body["parameters"] = params
-        if consistency:
-            body["consistency"] = consistency
-        request = urllib.request.Request(
-            self.query_url,
-            data=json.dumps(body).encode(),
-            headers=self._headers,
-            method="POST",
-        )
+        self._connect()
         started = time.perf_counter()
-        payload = self._send(request, query.name)
-        elapsed_ms = (time.perf_counter() - started) * 1000
-        error = payload.get("error")
-        if isinstance(error, dict):
-            raise FalkorError(str(error.get("code")), str(error.get("message")), query.name)
-        columns = tuple(str(name) for name in payload.get("columns") or [])
-        raw_rows = payload.get("rows") or []
-        rows = tuple(
-            {columns[index]: decode_cell(cell) for index, cell in enumerate(raw_row)}
-            for raw_row in raw_rows
+        try:
+            self._metrics.started += 1
+            result = self._g.query(query.cypher, params or {})
+            elapsed_ms = (time.perf_counter() - started) * 1000
+            self._metrics.completed += 1
+        except Exception as exc:
+            self._metrics.failed += 1
+            raise FalkorError("query_error", str(exc), query.name) from exc
+
+        header: list[str] = [col[1] for col in (result.header or [])]
+        rows: tuple[Row, ...] = tuple(
+            {header[i]: _to_cell(cell) for i, cell in enumerate(record)}
+            for record in (result.result_set or [])
         )
-        epoch = payload.get("read_epoch")
+        columns = tuple(header)
+        qid = self.next_query_id(query.name)
+        self._metrics.duration_us_sum += elapsed_ms * 1000
+        self._metrics.duration_count += 1
         return QueryResult(
             query=query,
-            query_id=str(payload.get("query_id") or ""),
+            query_id=qid,
             columns=columns,
             rows=rows,
             client_ms=elapsed_ms,
-            read_epoch=epoch if isinstance(epoch, int) else None,
+            read_epoch=None,
         )
 
-    def _send(self, request: urllib.request.Request, query_name: str) -> dict[str, object]:
-        try:
-            with urllib.request.urlopen(request, timeout=self.timeout_seconds) as response:
-                return json.loads(response.read().decode())
-        except urllib.error.HTTPError as error:
-            body = error.read().decode()
-            try:
-                payload = json.loads(body)
-            except json.JSONDecodeError as decode_error:
-                raise FalkorError(str(error.code), body, query_name) from decode_error
-            detail = payload.get("error") if isinstance(payload, dict) else None
-            if isinstance(detail, dict):
-                raise FalkorError(
-                    str(detail.get("code")), str(detail.get("message")), query_name
-                ) from error
-            raise FalkorError(str(error.code), body, query_name) from error
-        except urllib.error.URLError as error:
-            raise FalkorUnreachableError(self.base_url, str(error.reason)) from error
-        except TimeoutError as error:
-            raise FalkorUnreachableError(self.base_url, "timeout") from error
+    # ------------------------------------------------------------------
+    # Health / readiness
+    # ------------------------------------------------------------------
 
     def healthy(self) -> bool:
-        request = urllib.request.Request(f"{self.base_url}/healthz", method="GET")
         try:
-            with urllib.request.urlopen(request, timeout=5) as response:
-                return json.loads(response.read().decode()).get("status") == "ok"
-        except (OSError, TimeoutError, json.JSONDecodeError):
+            self._connect()
+            self._g.query("RETURN 1")
+            return True
+        except Exception:
             return False
 
     def wait_until_healthy(self, timeout_seconds: float = 60.0) -> bool:
@@ -251,39 +244,41 @@ class FalkorClient:
             return True
         return False
 
-    def metrics(self) -> FalkorMetrics:
-        request = urllib.request.Request(self.metrics_url, method="GET")
-        try:
-            with urllib.request.urlopen(request, timeout=5) as response:
-                text = response.read().decode()
-        except (urllib.error.URLError, TimeoutError) as error:
-            raise FalkorUnreachableError(self.metrics_url, str(error)) from error
-        return parse_metrics(text)
+    # ------------------------------------------------------------------
+    # Metrics
+    # ------------------------------------------------------------------
+
+    def metrics(self) -> "FalkorMetrics":
+        m = self._metrics
+        return FalkorMetrics(
+            query_rows_duration_us_sum=m.duration_us_sum,
+            query_rows_duration_count=m.duration_count,
+            read_op_seconds_sum=0.0,
+            read_op_count=0,
+            write_op_seconds_sum=0.0,
+            write_op_count=0,
+            query_started=m.started,
+            query_completed=m.completed,
+            query_failed=m.failed,
+            cache_entries=0,
+            cache_resident_bytes=0,
+        )
 
 
-def parse_metrics(text: str) -> FalkorMetrics:
-    values: dict[str, float] = {}
-    for line in text.splitlines():
-        if not line or line.startswith("#"):
-            continue
-        name, _, raw = line.rpartition(" ")
-        bare = name.split("{", 1)[0]
-        try:
-            values[bare] = values.get(bare, 0.0) + float(raw)
-        except ValueError:
-            continue
-    return FalkorMetrics(
-        query_rows_duration_us_sum=values.get("graph_query_rows_duration_microseconds_sum", 0.0),
-        query_rows_duration_count=int(
-            values.get("graph_query_rows_duration_microseconds_count", 0)
-        ),
-        read_op_seconds_sum=values.get("graph_client_operation_read_duration_seconds_sum", 0.0),
-        read_op_count=int(values.get("graph_client_operation_read_duration_seconds_count", 0)),
-        write_op_seconds_sum=values.get("graph_client_operation_write_duration_seconds_sum", 0.0),
-        write_op_count=int(values.get("graph_client_operation_write_duration_seconds_count", 0)),
-        query_started=int(values.get("graph_query_started", 0)),
-        query_completed=int(values.get("graph_query_completed", 0)),
-        query_failed=int(values.get("graph_query_failed", 0)),
-        cache_entries=int(values.get("graph_cache_entries", 0)),
-        cache_resident_bytes=int(values.get("graph_cache_resident_bytes", 0)),
+class _MutableMetrics:
+    """Simple in-process accumulator."""
+
+    __slots__ = (
+        "duration_us_sum",
+        "duration_count",
+        "started",
+        "completed",
+        "failed",
     )
+
+    def __init__(self) -> None:
+        self.duration_us_sum: float = 0.0
+        self.duration_count: int = 0
+        self.started: int = 0
+        self.completed: int = 0
+        self.failed: int = 0

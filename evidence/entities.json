@@ -11,17 +11,21 @@
     "PROBABLE": 48190,
     "AMBIGUOUS": 21059
   },
-  "aliases_written_to_falkordb": 0,
+  "aliases_written_to_falkordb": 300,
   "alias_states_in_falkordb": {
     "RESOLVED": 100,
     "PROBABLE": 100,
-    "AMBIGUOUS": 3993
+    "AMBIGUOUS": 100
   },
-  "written_alias_states": {},
+  "written_alias_states": {
+    "RESOLVED": 100,
+    "PROBABLE": 100,
+    "AMBIGUOUS": 100
+  },
   "write_selection": "stratified: top aliases by supporting-binding count per state",
   "candidate_edges_capped_at": 12,
   "write_limit": 300,
-  "extraction_seconds": 47.8,
+  "extraction_seconds": 83.3,
   "ambiguous_examples": [
     {
       "alias": "a patel",

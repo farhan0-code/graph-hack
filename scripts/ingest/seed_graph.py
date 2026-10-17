@@ -6,7 +6,7 @@ from pathlib import Path
 
 from canon_extraction.conflicts import load_inventory
 from canon_extraction.pipeline import seed_conflicts
-from canon_graph.hydra import FalkorClient
+from canon_graph.falkordb import FalkorClient
 from canon_graph.ingest import GraphWriter
 from canon_retrieval.dataset import corpus_db_path
 from canon_retrieval.store import CorpusStore
@@ -23,7 +23,7 @@ def main() -> int:
     args = parser.parse_args()
     client = FalkorClient.from_env()
     if not client.healthy():
-        print(f"FalkorDB unreachable at {client.base_url}; run `make falkordb-up`")
+        print(f"FalkorDB unreachable at {client.base_url}; run `make falkor-up`")
         return 2
     db_path = corpus_db_path(ROOT)
     if not db_path.exists():

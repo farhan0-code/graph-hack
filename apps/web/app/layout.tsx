@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <main className="pt-24">{children}</main>
         <footer className="border-t border-line px-6 py-10">
           <div className="mx-auto flex max-w-[1100px] flex-col gap-3 text-xs font-light text-faint sm:flex-row sm:items-center sm:justify-between">
-            <span>FalkorDB decides which evidence is current before it reaches the model.</span>
+            <span>FalkorDB OSS decides which evidence is current before it reaches the model.</span>
             <span className="font-mono">EnterpriseRAG-Bench · 511,958 documents indexed</span>
           </div>
         </footer>

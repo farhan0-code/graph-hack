@@ -18,7 +18,7 @@ jobs:
       - run: uv run ruff format --check .
       - run: uv run pytest -m "not falkordb"
 
-  hydra:
+  falkordb:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,11 +26,10 @@ jobs:
         with:
           enable-cache: true
       - run: uv sync --frozen
-      - name: Start MinIO and FalkorDB
+      - name: Start FalkorDB
         run: |
-          mkdir -p falkordb-data/cache falkordb-data/minio
-          printf '%s\n' 'local-development-token-32-bytes' > falkordb-data/auth-token
-          env UID="$(id -u)" GID="$(id -g)" docker compose up -d
+          mkdir -p falkordb-data
+          docker compose up -d
           uv run python scripts/verify/wait_for_falkordb.py
       - name: Graph integration tests
         run: uv run pytest -m falkordb

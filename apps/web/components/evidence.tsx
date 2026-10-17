@@ -41,7 +41,7 @@ export function EvidenceCard({ evidence, tone }: { evidence: Evidence; tone: "cu
   )
 }
 
-export function HydraQueryCard({ card }: { card: QueryCard }) {
+export function FalkorQueryCard({ card }: { card: QueryCard }) {
   return (
     <details className="group rounded-md border border-line bg-raised">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3">
@@ -66,3 +66,7 @@ export function HydraQueryCard({ card }: { card: QueryCard }) {
     </details>
   )
 }
+
+// Alias for any existing imports
+export const QueryCardView = FalkorQueryCard
+

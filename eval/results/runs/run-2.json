@@ -189,7 +189,7 @@
         "retrieval_ms": 987.28,
         "grounding_ms": 660.01
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -335,7 +335,7 @@
         "retrieval_ms": 581.72,
         "grounding_ms": 1376.75
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -479,7 +479,7 @@
         "retrieval_ms": 996.33,
         "grounding_ms": 503.12
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -621,7 +621,7 @@
         "retrieval_ms": 511.23,
         "grounding_ms": 335.73
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -765,7 +765,7 @@
         "retrieval_ms": 626.56,
         "grounding_ms": 284.16
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -911,7 +911,7 @@
         "retrieval_ms": 637.45,
         "grounding_ms": 351.12
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -1057,7 +1057,7 @@
         "retrieval_ms": 1048.45,
         "grounding_ms": 1680.25
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -1201,7 +1201,7 @@
         "retrieval_ms": 1159.7,
         "grounding_ms": 385.26
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -1347,7 +1347,7 @@
         "retrieval_ms": 552.85,
         "grounding_ms": 491.43
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -1493,7 +1493,7 @@
         "retrieval_ms": 946.68,
         "grounding_ms": 356.76
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -1639,7 +1639,7 @@
         "retrieval_ms": 1198.54,
         "grounding_ms": 371.95
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -1785,7 +1785,7 @@
         "retrieval_ms": 1193.05,
         "grounding_ms": 465.15
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -1931,7 +1931,7 @@
         "retrieval_ms": 779.82,
         "grounding_ms": 324.19
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -2077,7 +2077,7 @@
         "retrieval_ms": 780.56,
         "grounding_ms": 259.81
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -2223,7 +2223,7 @@
         "retrieval_ms": 661.82,
         "grounding_ms": 330.84
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -2369,7 +2369,7 @@
         "retrieval_ms": 867.48,
         "grounding_ms": 370.59
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -2515,7 +2515,7 @@
         "retrieval_ms": 697.41,
         "grounding_ms": 332.13
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -2661,7 +2661,7 @@
         "retrieval_ms": 876.47,
         "grounding_ms": 502.0
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -2807,7 +2807,7 @@
         "retrieval_ms": 755.03,
         "grounding_ms": 376.07
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",
@@ -2951,7 +2951,7 @@
         "retrieval_ms": 796.08,
         "grounding_ms": 365.57
       },
-      "hydra_query_names": [
+      "graph_query_names": [
         "artifact_claims",
         "all_claim_keys",
         "entity_of_claim_key",

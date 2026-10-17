@@ -2,7 +2,7 @@ import pytest
 
 from canon_graph import ids
 from canon_graph.canonize import AssertionInput, ClaimBundle, SupersessionSignal, canonize
-from canon_graph.hydra import FalkorClient
+from canon_graph.falkordb import FalkorClient
 from canon_graph.ingest import GraphWriter
 from canon_graph.resolve import GraphReader
 from canon_graph.schema import (
@@ -15,7 +15,7 @@ from canon_graph.schema import (
     TruthState,
 )
 
-pytestmark = pytest.mark.hydra
+pytestmark = pytest.mark.falkordb
 
 KEY = "VerifyCo Nova.price_per_1k_tokens"
 
@@ -53,14 +53,14 @@ def majority_bundle() -> ClaimBundle:
 
 
 def test_write_then_resolve_majority_vs_supersession(
-    hydra: FalkorClient, verify_writer: GraphWriter
+    falkordb: FalkorClient, verify_writer: GraphWriter
 ) -> None:
     bundle = majority_bundle()
     decision = canonize(bundle)
     claim_key_id, propositions = verify_writer.write_claim(bundle, decision, {})
     assert verify_writer.report.nodes_created > 0
 
-    reader = GraphReader(hydra)
+    reader = GraphReader(falkordb)
     claim_key = reader.claim_key(KEY)
     assert claim_key is not None and claim_key.id == claim_key_id
     resolution = reader.resolve(claim_key)
@@ -82,24 +82,24 @@ def test_write_then_resolve_majority_vs_supersession(
     assert propositions["$0.08"] == ids.proposition_id(KEY, "$0.08", ids.Namespace.VERIFY)
 
 
-def test_reingest_is_idempotent(hydra: FalkorClient, verify_writer: GraphWriter) -> None:
+def test_reingest_is_idempotent(falkordb: FalkorClient, verify_writer: GraphWriter) -> None:
     bundle = majority_bundle()
     decision = canonize(bundle)
     verify_writer.write_claim(bundle, decision, {})
     first = verify_writer.report.nodes_created
-    second_writer = GraphWriter(hydra, ids.Namespace.VERIFY)
+    second_writer = GraphWriter(falkordb, ids.Namespace.VERIFY)
     second_writer.write_claim(bundle, decision, {})
     assert second_writer.report.nodes_created == 0
     assert second_writer.report.edges_created == 0
     assert first > 0
-    reader = GraphReader(hydra)
+    reader = GraphReader(falkordb)
     claim_key = reader.claim_key(KEY)
     assert claim_key is not None
     assert len(reader.resolve(claim_key).retired_evidence) == 8
 
 
 def test_residue_reverse_traversal_and_proof(
-    hydra: FalkorClient, verify_writer: GraphWriter
+    falkordb: FalkorClient, verify_writer: GraphWriter
 ) -> None:
     bundle = majority_bundle()
     decision = canonize(bundle)
@@ -117,7 +117,7 @@ def test_residue_reverse_traversal_and_proof(
     assertion_id = verify_writer.write_assertion(
         KEY, propositions["$0.08"], residue, "Quote 42", ResidueClass.VERIFIED_STRUCTURED
     )
-    reader = GraphReader(hydra)
+    reader = GraphReader(falkordb)
     rows = reader.residue(propositions["$0.08"])
     assert [row.assertion.doc_id for row in rows] == ["verify_residue_doc"]
     assert rows[0].assertion.residue_class is ResidueClass.VERIFIED_STRUCTURED
@@ -132,8 +132,8 @@ def test_residue_reverse_traversal_and_proof(
     assert claims[0].residue_class is ResidueClass.VERIFIED_STRUCTURED
 
 
-def test_unknown_and_contested_states(hydra: FalkorClient, verify_writer: GraphWriter) -> None:
-    reader = GraphReader(hydra)
+def test_unknown_and_contested_states(falkordb: FalkorClient, verify_writer: GraphWriter) -> None:
+    reader = GraphReader(falkordb)
     assert reader.claim_key("VerifyCo.never_asserted") is None
     contested = ClaimBundle(
         entity_name="VerifyCo Atlas",

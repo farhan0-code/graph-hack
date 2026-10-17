@@ -2,7 +2,7 @@ import re
 from dataclasses import dataclass, field
 from enum import StrEnum
 
-from canon_graph.querycard import HydraQueryCard
+from canon_graph.querycard import FalkorQueryCard
 from canon_graph.resolve import ArtifactClaim, GraphReader, Resolution
 from canon_graph.schema import ClaimKey, Discovery, PropositionStatus, Stance, TruthState
 
@@ -73,7 +73,7 @@ class Grounding:
     docs: tuple[DocGrounding, ...]
     pinned_doc_ids: tuple[str, ...]
     claim_key_matches: tuple[ClaimKeyMatch, ...]
-    query_cards: tuple[HydraQueryCard, ...] = field(default_factory=tuple)
+    query_cards: tuple[FalkorQueryCard, ...] = field(default_factory=tuple)
 
     @property
     def kept_doc_ids(self) -> tuple[str, ...]:

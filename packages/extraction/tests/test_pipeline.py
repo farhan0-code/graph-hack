@@ -15,7 +15,8 @@ FIXTURES = ROOT / "packages" / "retrieval" / "tests" / "fixtures" / "gold_excerp
 
 class DictDocuments:
     def __init__(self) -> None:
-        self.by_id = {row["doc_id"]: Document(**row) for row in json.loads(FIXTURES.read_text())}
+        data = json.loads(FIXTURES.read_text(encoding="utf-8"))
+        self.by_id = {row["doc_id"]: Document(**row) for row in data}
 
     def document(self, doc_id: str) -> Document | None:
         return self.by_id.get(doc_id)

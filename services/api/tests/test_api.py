@@ -1,7 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
-pytestmark = pytest.mark.hydra
+pytestmark = pytest.mark.falkordb
 
 
 @pytest.fixture(scope="module")
@@ -11,15 +11,15 @@ def client() -> TestClient:
     except Exception as error:
         pytest.skip(f"api service unavailable in this environment: {error}")
     if not service.healthy():
-        pytest.skip("FalkorDB not reachable; run `make falkordb-up`")
+        pytest.skip("FalkorDB not reachable; run `make falkor-up`")
     if not service.reader.all_claim_keys():
         pytest.skip("graph is empty; run `make seed`")
     return TestClient(app)
 
 
-def test_health_reports_hydra_and_corpus(client: TestClient) -> None:
+def test_health_reports_falkordb_and_corpus(client: TestClient) -> None:
     payload = client.get("/health").json()
-    assert payload["hydra"] is True
+    assert payload["falkordb"] is True
     assert payload["corpus_documents"] > 0
 
 

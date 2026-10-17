@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 
 from canon_graph import ids, queries
 from canon_graph.canonize import AssertionInput, CanonDecision, ClaimBundle
-from canon_graph.hydra import FalkorClient, FalkorError, Param
+from canon_graph.falkordb import FalkorClient, FalkorError, Param
 from canon_graph.schema import (
     Discovery,
     EdgeType,
@@ -31,7 +31,9 @@ class WriteReport:
 
 
 class GraphWriter:
-    def __init__(self, client: FalkorClient, namespace: ids.Namespace = ids.Namespace.CANON) -> None:
+    def __init__(
+        self, client: FalkorClient, namespace: ids.Namespace = ids.Namespace.CANON
+    ) -> None:
         self.client = client
         self.namespace = namespace
         self.report = WriteReport()

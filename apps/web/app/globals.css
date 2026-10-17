@@ -85,7 +85,7 @@ button:disabled {
   }
 }
 
-.strata-bar {
+.canon-bar {
   background: linear-gradient(
     to top,
     color-mix(in oklab, var(--color-accent) 55%, transparent) 0%,
@@ -94,10 +94,10 @@ button:disabled {
     transparent 94%
   );
   transform-origin: bottom;
-  animation: strata-rise 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: canon-rise 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-@keyframes strata-rise {
+@keyframes canon-rise {
   from {
     transform: scaleY(0.28);
     opacity: 0;
@@ -105,7 +105,7 @@ button:disabled {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .strata-bar {
+  .canon-bar {
     animation: none;
   }
 }

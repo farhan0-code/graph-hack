@@ -10,7 +10,7 @@ export function HeroBackground() {
           return (
             <span
               key={index}
-              className="strata-bar w-[2.4%] max-w-[46px] rounded-t-[2px]"
+              className="canon-bar w-[2.4%] max-w-[46px] rounded-t-[2px]"
               style={{
                 height: `${height}%`,
                 opacity: 0.1 + (1 - distance) * 0.5,

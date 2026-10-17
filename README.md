@@ -2,7 +2,7 @@
 
 <img src="assets/cover.jpg" alt="Canon — old truth shouldn't become new context" width="100%" />
 
-[![CI](https://github.com/toufiqfarhan0/falkor-hack/actions/workflows/verify.yml/badge.svg)](https://github.com/toufiqfarhan0/falkor-hack/actions/workflows/verify.yml)
+[![CI](https://github.com/farhan0-code/graph-hack/actions/workflows/verify.yml/badge.svg)](https://github.com/farhan0-code/graph-hack/actions/workflows/verify.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Tests](https://img.shields.io/badge/tests-71%20passing-10b981)
 ![Database](https://img.shields.io/badge/database-FalkorDB-7dd3a0)
@@ -25,7 +25,9 @@ present-tense context — while staying fully answerable as history.
 
 ## ▶ Demo
 
-https://github.com/user-attachments/assets/fccf8d5f-eb14-4e97-bd56-7aea6e5377c6
+[![Canon Demo Video](https://img.youtube.com/vi/eIrE17qlf7Q/maxresdefault.jpg)](https://youtu.be/eIrE17qlf7Q)
+
+[**▶ Watch the 2:31 video walkthrough on YouTube (https://youtu.be/eIrE17qlf7Q)**](https://youtu.be/eIrE17qlf7Q)
 
 Every frame is the real console driving the real graph — no mockups, no after-effects screens. It
 walks one benchmark conflict end to end: a Confluence page still publishing retired pricing, the
